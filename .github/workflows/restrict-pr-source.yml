@@ -1,0 +1,30 @@
+name: Restrict PR source branch
+
+on:
+  pull_request:
+    branches: [main, dev]
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify allowed source branch
+        run: |
+          BASE="${{ github.base_ref }}"
+          HEAD="${{ github.head_ref }}"
+
+          echo "Target branch (base): $BASE"
+          echo "Source branch (head): $HEAD"
+
+          if [ "$BASE" = "main" ] && [ "$HEAD" != "preprod" ]; then
+            echo " PRs into main are only allowed from 'preprod'. This PR is from '$HEAD'."
+            exit 1
+          fi
+
+          if [ "$BASE" = "dev" ] && [ "$HEAD" != "feature" ]; then
+            echo " PRs into dev are only allowed from 'feature'. This PR is from '$HEAD'."
+            exit 1
+          fi
+
+          echo " Source branch '$HEAD' is allowed to merge into '$BASE'"
