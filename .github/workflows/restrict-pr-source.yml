@@ -14,14 +14,17 @@ jobs:
           BASE="${{ github.base_ref }}"
           HEAD="${{ github.head_ref }}"
 
+          echo "Target branch (base): $BASE"
+          echo "Source branch (head): $HEAD"
+
           if [ "$BASE" = "main" ] && [ "$HEAD" != "preprod" ]; then
-            echo "PRs into main are only allowed from 'preprod'. This PR is from '$HEAD'."
+            echo " PRs into main are only allowed from 'preprod'. This PR is from '$HEAD'."
             exit 1
           fi
 
           if [ "$BASE" = "dev" ] && [ "$HEAD" != "feature" ]; then
-            echo "PRs into dev are only allowed from 'feature'. This PR is from '$HEAD'."
+            echo " PRs into dev are only allowed from 'feature'. This PR is from '$HEAD'."
             exit 1
           fi
 
-          echo "Source branch '$HEAD' is allowed to merge into '$BASE'"
+          echo " Source branch '$HEAD' is allowed to merge into '$BASE'"
