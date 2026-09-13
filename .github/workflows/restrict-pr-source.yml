@@ -16,8 +16,23 @@ jobs:
             echo "This PR is from '${{ github.head_ref }}'."
             exit 1
           fi
-          echo "Source branch verified as preprod"
-
+           echo "Source branch verified as preprod"
+             pull_request:
+    branches: [dev]
+    types: [opened, synchronize, reopened, edited]
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify source branch is features
+        run: |
+          if [ "${{ github.head_ref }}" != "features" ]; then
+            echo "PRs into main are only allowed from 'features'."
+            echo "This PR is from '${{ github.head_ref }}'."
+            exit 1
+          fi
+          echo "Source branch verified as features"
+         
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
